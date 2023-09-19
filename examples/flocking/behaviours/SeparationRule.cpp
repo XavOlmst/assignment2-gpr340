@@ -5,7 +5,25 @@
 
 Vector2f SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Boid* boid) {
   // Try to avoid boids too close
-  Vector2f separatingForce = Vector2f::zero();
+  Vector2f separatingForce;
+
+  if (neighborhood.size() <= 0) return separatingForce;
+
+  int closeNeighbors = 0;
+
+  for (Boid* neighbor : neighborhood) {
+    auto distance = boid->getPosition() - neighbor->getPosition();
+
+    if (distance.getMagnitude() < desiredMinimalDistance) {
+      separatingForce += neighbor->getPosition();
+      closeNeighbors++;
+    }
+  }
+
+  if (closeNeighbors == 0) return separatingForce;
+
+  separatingForce = separatingForce / neighborhood.size();
+  separatingForce = boid->getPosition() - separatingForce;
 
   //    float desiredDistance = desiredMinimalDistance;
   //
@@ -16,9 +34,9 @@ Vector2f SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Bo
   //        // todo: find and apply force only on the closest mates
   //    }
 
-  separatingForce = Vector2f::normalized(separatingForce);
+  // separatingForce = Vector2f::normalized(separatingForce);
 
-  return separatingForce;
+  return separatingForce.normalized();
 }
 
 bool SeparationRule::drawImguiRuleExtra() {
