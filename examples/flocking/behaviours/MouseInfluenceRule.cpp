@@ -9,7 +9,7 @@ Vector2f MouseInfluenceRule::computeForce(const std::vector<Boid*>& neighborhood
       if (ImGui::IsMousePosValid() && io.MouseDown[0]) {
           Vector2f mousePos(io.MousePos.x, io.MousePos.y); // todo: use this
           Vector2f displacement = mousePos - boid->getPosition(); // todo: change this
-          float distance = (mousePos - boid->getPosition()).getMagnitude(); // todo: change this
+          float distance = displacement.getMagnitude(); // todo: change this
   
           //The force is inversely proportional to distance
           Vector2f force = displacement / distance; // todo: change this

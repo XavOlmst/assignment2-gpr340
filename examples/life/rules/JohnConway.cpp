@@ -16,19 +16,6 @@ void JohnConway::Step(World& world) {
       } else {
         if (CountNeighbors(world, curPoint) == 3) world.SetNext(curPoint, true);
       }
-
-      // if (world.Get(curPoint))
-      //{
-      //   if (CountNeighbors(world, curPoint) <= 3)
-      //     world.SetNext(curPoint, false);
-      //   else
-      //     world.SetNext(curPoint, true);
-      // }
-      // else
-      //{
-      //   if (CountNeighbors(world, curPoint) > 4)
-      //       world.SetNext(curPoint, true);
-      // }
     }
   }
 
