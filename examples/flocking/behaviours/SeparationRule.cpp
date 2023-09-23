@@ -7,7 +7,7 @@ Vector2f SeparationRule::computeForce(const std::vector<Boid*>& neighborhood, Bo
   // Try to avoid boids too close
   Vector2f separatingForce = Vector2f::zero();
 
-  if (neighborhood.size() <= 0) return separatingForce;
+  if (neighborhood.empty()) return separatingForce;
 
   int closeNeighbors = 0;
 
