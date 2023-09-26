@@ -19,13 +19,10 @@ bool RecursiveBacktrackerExample::Step(World* w) {
   auto frontier = getVisitables(w, cameFrom);
 
   if (frontier.size() == 0) {
-    while (stack.size() != 0) {
-      w->SetNodeColor(stack.back(), VISITED);
-      visited[stack.back().y][stack.back().x];
-      stack.pop_back();
-      if (stack.size() == 0) return false;
-      if (getVisitables(w, stack.back()).size() != 0) break;
-    }
+    w->SetNodeColor(stack.back(), VISITED);
+    visited[stack.back().y][stack.back().x];
+    stack.pop_back();
+    if (stack.size() == 0) return false;
   } else {
     auto random_index = Random::Range(0, frontier.size() - 1);
     auto goingTo = frontier[random_index];

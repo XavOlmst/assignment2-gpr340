@@ -13,7 +13,7 @@ bool PrimExample::Step(World* w) {
 
   // Suppost to do something when it's not initialized
   if (!initialized) {
-    Point2D p(-sideOver2 + 1, -sideOver2);
+    Point2D p(0, 0);
     toBeVisited.push_back(p);
     w->SetNodeColor(p, Color::PaleVioletRed);
     initialized = true;
