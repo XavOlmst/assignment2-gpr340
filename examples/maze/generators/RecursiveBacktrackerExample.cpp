@@ -16,12 +16,27 @@ bool RecursiveBacktrackerExample::Step(World* w) {
   }
 
   auto cameFrom = stack.back();
-
   auto frontier = getVisitables(w, cameFrom);
-  auto random_index = Random::Range(0, frontier.size() - 1);
-  auto goingTo = frontier[random_index];
 
-  w->SetNodeColor(goingTo, FRONTIRE);
+  if (frontier.size() == 0) {
+    while (stack.size() != 0) {
+      w->SetNodeColor(stack.back(), VISITED);
+      visited[stack.back().y][stack.back().x];
+      stack.pop_back();
+      if (stack.size() == 0) return false;
+      if (getVisitables(w, stack.back()).size() != 0) break;
+    }
+  } else {
+    auto random_index = Random::Range(0, frontier.size() - 1);
+    auto goingTo = frontier[random_index];
+    w->SetNodeColor(goingTo, FRONTIRE);
+
+    auto direction = goingTo - cameFrom;
+
+    deactivateWallInDirection(w, cameFrom, direction);
+
+    stack.push_back(goingTo);
+  }
 
   return true;
 }
@@ -37,6 +52,7 @@ void RecursiveBacktrackerExample::Clear(World* world) {
     }
   }
 }
+
 Point2D RecursiveBacktrackerExample::randomStartPoint(World* world) {
   auto sideOver2 = world->GetSize() / 2;
 
@@ -65,4 +81,17 @@ std::vector<Point2D> RecursiveBacktrackerExample::getVisitables(World* w, const 
   }
 
   return visitables;
+}
+
+void RecursiveBacktrackerExample::deactivateWallInDirection(World* w, const Point2D& p, const Point2D& direction) {
+  // Set neighbor wall inactive
+  if (direction == Point2D::UP) {
+    w->SetNorth(p, false);
+  } else if (direction == Point2D::LEFT) {
+    w->SetWest(p, false);
+  } else if (direction == Point2D::DOWN) {
+    w->SetSouth(p, false);
+  } else if (direction == Point2D::RIGHT) {
+    w->SetEast(p, false);
+  }
 }

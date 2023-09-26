@@ -2,10 +2,14 @@
 #include "../World.h"
 #include "Random.h"
 
+#define FRONTIRE Color::BlueViolet
+#define UNVISITED Color::DarkGray
+#define VISITED Color::Black
+
 bool PrimExample::Step(World* w) {
   int sideOver2 = w->GetSize() / 2;
-  auto visitedColor = Color::Black;
-  auto toVisitColor = Color::PaleVioletRed;
+  //auto visitedColor = Color::Black;
+  //auto toVisitColor = Color::PaleVioletRed;
 
   // Suppost to do something when it's not initialized
   if (!initialized) {
@@ -19,7 +23,7 @@ bool PrimExample::Step(World* w) {
   auto random_index = Random::Range(0, toBeVisited.size() - 1);
   auto node = toBeVisited[random_index];
 
-  w->SetNodeColor(node, visitedColor);
+  w->SetNodeColor(node, VISITED);
   toBeVisited.erase(std::remove(toBeVisited.begin(), toBeVisited.end(), node), toBeVisited.end());
 
   auto visitedNeighbors = getVisitedNeighbors(w, node);
@@ -30,18 +34,14 @@ bool PrimExample::Step(World* w) {
     auto direction = visitedNeighbors[random_index] - node;
 
     // Set neighbor wall inactive
-    if (direction == Point2D::UP) {
+    if (direction == Point2D::UP && abs(node.y) <= sideOver2) {
       w->SetNorth(node, false);
-      // w->SetSouth(visitedNeighbors[random_index], false);
-    } else if (direction == Point2D::LEFT) {
-      w->SetEast(node, false);
-      // w->SetWest(visitedNeighbors[random_index], false);
-    } else if (direction == Point2D::DOWN) {
-      w->SetSouth(node, false);
-      // w->SetNorth(visitedNeighbors[random_index], false);
-    } else if (direction == Point2D::RIGHT) {
+    } else if (direction == Point2D::LEFT && abs(node.x) <= sideOver2) {
       w->SetWest(node, false);
-      // w->SetEast(visitedNeighbors[random_index], false);
+    } else if (direction == Point2D::DOWN && abs(node.y) <= sideOver2) {
+      w->SetSouth(node, false);
+    } else if (direction == Point2D::RIGHT && abs(node.x) <= sideOver2) {
+      w->SetEast(node, false);
     }
   }
 
@@ -51,7 +51,7 @@ bool PrimExample::Step(World* w) {
 
   for (auto visitableNeighbor : visitables) {
     toBeVisited.push_back(visitableNeighbor);
-    w->SetNodeColor(visitableNeighbor, toVisitColor);
+    w->SetNodeColor(visitableNeighbor, FRONTIRE);
   }
 
   if (toBeVisited.empty()) return false;
@@ -67,7 +67,6 @@ std::vector<Point2D> PrimExample::getVisitables(World* w, const Point2D& p) {
   auto sideOver2 = w->GetSize() / 2;
   std::vector<Point2D> deltas = {Point2D::UP, Point2D::DOWN, Point2D::LEFT, Point2D::RIGHT};
   std::vector<Point2D> visitables;
-  auto clearColor = Color::DarkGray;
 
   // Adds all deltas as visitables
   for (auto direction : deltas) {
@@ -76,7 +75,7 @@ std::vector<Point2D> PrimExample::getVisitables(World* w, const Point2D& p) {
     // Ensures not over on sides
     if (abs(nextPoint.x) > sideOver2 || abs(nextPoint.y) > sideOver2) continue;
 
-    if (w->GetNodeColor(nextPoint) == clearColor) {
+    if (w->GetNodeColor(nextPoint) == UNVISITED) {
       visitables.push_back(nextPoint);
     }
   }
@@ -88,15 +87,14 @@ std::vector<Point2D> PrimExample::getVisitedNeighbors(World* w, const Point2D& p
   std::vector<Point2D> deltas = {Point2D::UP, Point2D::DOWN, Point2D::LEFT, Point2D::RIGHT};
   auto sideOver2 = w->GetSize() / 2;
   std::vector<Point2D> neighbors;
-  auto visitedColor = Color::Black;
 
   for (Point2D direction : deltas) {
     Point2D nextPoint = p + direction;
 
     // Ensures not over on sides
-    if (abs(nextPoint.x) > sideOver2 || abs(nextPoint.y) > sideOver2) break;
+    if (abs(nextPoint.x) > sideOver2 || abs(nextPoint.y) > sideOver2) continue;
 
-    if (w->GetNodeColor(nextPoint) == visitedColor) neighbors.push_back(nextPoint);
+    if (w->GetNodeColor(nextPoint) == VISITED) neighbors.push_back(nextPoint);
   }
 
   return neighbors;
