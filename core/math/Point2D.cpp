@@ -9,6 +9,8 @@ bool Point2D::operator==(const Point2D& rhs) const { return y == rhs.y && x == r
 
 bool Point2D::operator!=(const Point2D& rhs) const { return x != rhs.x || y != rhs.y; }
 
+bool Point2D::operator<(const Point2D& rhs) const { return x + y < rhs.x + rhs.y; }
+
 Point2D& Point2D::operator=(const Point2D& rhs) {
   // Check for self-assignment
   if (this == &rhs) return *this;

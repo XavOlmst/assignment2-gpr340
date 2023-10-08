@@ -10,6 +10,7 @@ public:
   int x, y;
   bool operator==(const Point2D& rhs) const;
   bool operator!=(const Point2D& rhs) const;
+  bool operator<(const Point2D& rhs) const;
   Point2D& operator=(const Point2D& rhs);
   Point2D operator+(const Point2D& rhs) const;
   Point2D& operator+=(const Point2D& rhs);
